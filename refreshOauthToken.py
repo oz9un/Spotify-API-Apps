@@ -25,4 +25,4 @@ if __name__ == '__main__':
     client_id = sys.argv[1]
     client_secret = sys.argv[2]
     refresh_token = sys.argv[3]
-    spotify_api = SpotifyAPI()
+    spotify_api = SpotifyAPI(refresh_token, client_id, client_secret)
