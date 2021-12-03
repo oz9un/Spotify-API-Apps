@@ -2,9 +2,10 @@ from refreshOauthToken import SpotifyAPI
 import argparse, requests, json
 
 class SearchSong:
-    def __init__(self, refresh_token, client_id, client_secret, search_string):
+    def __init__(self, refresh_token, client_id, client_secret, artist, song):
         self.access_token = SpotifyAPI(refresh_token, client_id, client_secret).RequestAccessToken()
-        self.search_string = search_string
+        self.artist = artist
+        self.song = song
 
     def searchSong(self):
         URL = "https://api.spotify.com/v1/search"
@@ -13,7 +14,7 @@ class SearchSong:
             "Content-Type": "application/json",
         }
         query_params = {
-            "q": self.search_string,
+            "q": self.song,
             "type": "track",
         }
 
@@ -28,12 +29,25 @@ if __name__ == '__main__':
     parser.add_argument("-id", "--client_id", required=True, help="Client ID of Spotify account, obtained from Spotify developer dashboard.")
     parser.add_argument("-secret", "--client_secret", required=True, help="Client Secret of Spotify account, obtained from Spotify developer dashboard.")
     parser.add_argument("-token", "--refresh_token", required=True, help="Refresh token, obtained after authorization process.")
-    parser.add_argument("-s", "--search", required=True, help="Search string for target song.")
+    parser.add_argument("-s", "--song", required=True, help="Search string for target song.")
+    parser.add_argument("-a", "--artist", required=True, help="Search string for target artist.")
 
 
     args = vars(parser.parse_args())
 
-    spotify_api = SearchSong(args["refresh_token"], args["client_id"], args["client_secret"], args["search"])
+    spotify_api = SearchSong(args["refresh_token"], args["client_id"], args["client_secret"], args["artist"], args["song"])
 
     search_result = spotify_api.searchSong()
-    print(json.loads(search_result)["tracks"])
+    result = json.loads(search_result)["tracks"]["items"]
+
+    popularity_sort = {}
+    found = False
+    for x in result:
+        popularity_sort[x["uri"]] = x["popularity"]
+        if x["name"] == args["song"] and x["artist"][0]["name"] == args["artist"]:
+            print("Found")
+            found = True
+            print(x["name"] + " -> " + x["artists"][0]["name"])
+    
+    sorted_popularity = sorted(popularity_sort.items(), key=lambda x: x[1], reverse=True)
+        
