@@ -18,8 +18,22 @@ class SearchSong:
             "type": "track",
         }
 
-        response = requests.get(url=URL, headers=HEADERS,params=query_params)
-        return response.text
+        response = requests.get(url=URL, headers=HEADERS,params=query_params).text
+        
+        result = json.loads(response)["tracks"]["items"]
+
+        popularity_sort = {}
+        found = False
+        for x in result:
+            popularity_sort[x["uri"]] = x["popularity"]
+            if x["name"] == args["song"] and x["artist"][0]["name"] == args["artist"]:
+                print("Found")
+                found = True
+                print(x["name"] + " -> " + x["artists"][0]["name"])
+        
+        sorted_popularity = sorted(popularity_sort.items(), key=lambda x: x[1], reverse=True)
+        print(sorted_popularity)
+        
 
 
 if __name__ == '__main__':
@@ -38,16 +52,3 @@ if __name__ == '__main__':
     spotify_api = SearchSong(args["refresh_token"], args["client_id"], args["client_secret"], args["artist"], args["song"])
 
     search_result = spotify_api.searchSong()
-    result = json.loads(search_result)["tracks"]["items"]
-
-    popularity_sort = {}
-    found = False
-    for x in result:
-        popularity_sort[x["uri"]] = x["popularity"]
-        if x["name"] == args["song"] and x["artist"][0]["name"] == args["artist"]:
-            print("Found")
-            found = True
-            print(x["name"] + " -> " + x["artists"][0]["name"])
-    
-    sorted_popularity = sorted(popularity_sort.items(), key=lambda x: x[1], reverse=True)
-        
