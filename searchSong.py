@@ -21,24 +21,31 @@ class SearchSong:
         response = requests.get(url=URL, headers=HEADERS,params=query_params).text
         
         result = json.loads(response)["tracks"]["items"]
+        #print(result)
 
         popularity_sort = {}
-        found = False
+        #found = False
         for x in result:
             popularity_sort[x["uri"]] = x["popularity"]
             if x["name"] == args["song"] and x["artist"][0]["name"] == args["artist"]:
                 print("Found")
                 found = True
                 print(x["name"] + " -> " + x["artists"][0]["name"])
-        
+
+        most_close = result[0]["uri"]
         sorted_popularity = sorted(popularity_sort.items(), key=lambda x: x[1], reverse=True)
         
+        if most_close:
+            print(most_close)
+            return most_close
+
+        '''
         if not found:
             print("From popularity:")
             print(sorted_popularity[0][0])
             return sorted_popularity[0][0]
+        '''
         
-
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
