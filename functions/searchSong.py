@@ -1,4 +1,4 @@
-from refreshOauthToken import RefreshOauth
+from functions.refreshOauthToken import RefreshOauth
 import argparse, requests, json
 
 class SearchSong:
