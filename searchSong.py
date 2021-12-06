@@ -36,7 +36,8 @@ class SearchSong:
         sorted_popularity = sorted(popularity_sort.items(), key=lambda x: x[1], reverse=True)
         
         if most_close:
-            print(most_close)
+            respo = open("response.txt", "w")
+            respo.write(most_close)
             return most_close
 
         '''
