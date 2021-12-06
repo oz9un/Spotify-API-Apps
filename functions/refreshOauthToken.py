@@ -1,6 +1,6 @@
 import requests, json, base64, sys, argparse
 
-class SpotifyAPI:
+class RefreshOauth:
     def __init__(self, refresh_token, client_id, client_secret):
         self.refresh_token = refresh_token
         self.client_id = client_id
@@ -32,7 +32,7 @@ if __name__ == '__main__':
 
     args = vars(parser.parse_args())
 
-    spotify_api = SpotifyAPI(args["refresh_token"], args["client_id"], args["client_secret"])
+    spotify_api = RefreshOauth(args["refresh_token"], args["client_id"], args["client_secret"])
 
     access_token = spotify_api.RequestAccessToken()
     print("Your new access token is: " + access_token)

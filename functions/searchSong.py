@@ -1,9 +1,12 @@
-from refreshOauthToken import SpotifyAPI
+from functions.refreshOauthToken import RefreshOauth
 import argparse, requests, json
 
 class SearchSong:
-    def __init__(self, refresh_token, client_id, client_secret, artist, song):
-        self.access_token = SpotifyAPI(refresh_token, client_id, client_secret).RequestAccessToken()
+    def __init__(self, client_id, client_secret, artist, song, refresh_token = "", oauth_token = ""):
+        if refresh_token != "":
+            self.access_token = RefreshOauth(refresh_token, client_id, client_secret).RequestAccessToken()
+        else:
+            self.access_token = oauth_token
         self.artist = artist
         self.song = song
 
@@ -27,7 +30,7 @@ class SearchSong:
         #found = False
         for x in result:
             popularity_sort[x["uri"]] = x["popularity"]
-            if x["name"] == args["song"] and x["artist"][0]["name"] == args["artist"]:
+            if x["name"] == self.song and x["artist"][0]["name"] == self.artist:
                 print("Found")
                 found = True
                 print(x["name"] + " -> " + x["artists"][0]["name"])
@@ -61,6 +64,6 @@ if __name__ == '__main__':
 
     args = vars(parser.parse_args())
 
-    spotify_api = SearchSong(args["refresh_token"], args["client_id"], args["client_secret"], args["artist"], args["song"])
+    spotify_api = SearchSong(args["client_id"], args["client_secret"], args["artist"], args["song"], refresh_token=args["refresh_token"])
 
     search_result = spotify_api.searchSong()
