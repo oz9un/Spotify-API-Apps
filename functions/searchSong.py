@@ -1,4 +1,4 @@
-from functions.refreshOauthToken import RefreshOauth
+from refreshOauthToken import RefreshOauth
 import argparse, requests, json
 
 class SearchSong:
@@ -9,6 +9,7 @@ class SearchSong:
             self.access_token = oauth_token
         self.artist = artist
         self.song = song
+        self.search_string = self.song + " " + self.artist
 
     def searchSong(self):
         URL = "https://api.spotify.com/v1/search"
@@ -17,7 +18,7 @@ class SearchSong:
             "Content-Type": "application/json",
         }
         query_params = {
-            "q": self.song,
+            "q": self.search_string,
             "type": "track",
         }
 
@@ -40,6 +41,7 @@ class SearchSong:
         
         if most_close:
             respo = open("response.txt", "w")
+            print("MOST CLOSE -> " + most_close)
             respo.write(most_close)
             return most_close
 
