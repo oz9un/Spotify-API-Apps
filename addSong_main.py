@@ -51,7 +51,10 @@ if __name__ == '__main__':
     args = vars(parser.parse_args())
 
     spotify_api = AddMyFavoriteSong(args["client_id"], args["client_secret"], args["refresh_token"], args["song"], args["artist"], args["playlist"])
-
-    spotify_api.run_all()
-
+    
+    try:
+      spotify_api.run_all()
+    except:
+      f = open("failed_operation", "w")
+      f.write("oopps. try again")
 
