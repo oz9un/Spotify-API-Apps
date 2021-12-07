@@ -54,7 +54,7 @@ if __name__ == '__main__':
     
     try:
       spotify_api.run_all()
-    except:
+    except Exception as e:
       f = open("failed_operation", "w")
       f.write("oopps. try again")
 

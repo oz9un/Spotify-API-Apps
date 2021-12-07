@@ -31,10 +31,13 @@ class SearchSong:
         #found = False
         for x in result:
             popularity_sort[x["uri"]] = x["popularity"]
-            if x["name"] == self.song and x["artist"][0]["name"] == self.artist:
-                print("Found")
-                found = True
-                print(x["name"] + " -> " + x["artists"][0]["name"])
+            try:
+                if x["name"] == self.song and x["artist"][0]["name"] == self.artist:
+                    print("Found")
+                    found = True
+                    print(x["name"] + " -> " + x["artists"][0]["name"])
+            except:
+                pass
 
         most_close = result[0]["uri"]
         sorted_popularity = sorted(popularity_sort.items(), key=lambda x: x[1], reverse=True)
